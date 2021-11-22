@@ -1,0 +1,14 @@
+{
+  "verbose": true,
+  "testTimeout": 20000,
+  "collectCoverage": true,
+  "moduleFileExtensions": [
+    "js",
+    "mjs"
+  ],
+  "transform": {
+    "^.+\\.js$": "babel-jest",
+    "^.+\\.mjs$": "babel-jest"
+  },
+  "testRegex": "((\\.|/*.)(spec))\\.js?$"
+}
