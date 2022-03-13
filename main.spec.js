@@ -43,17 +43,17 @@ describe(`Infinite V3 automation testing`, () => {
 
   test.only("Open PCP", async () => {
     let homePage = new HomePage(driver, until);
-    await homePage.clickNavShop();
+    await homePage.clickNavDresses();
   });
 
-  test.only("Number of PCP", async () => {
+  test.skip("Number of PCP", async () => {
     let pcp = new PCP(driver, until);
     console.log(`Number of Product Tiles found`);
     console.log(await pcp.getNumberOfProductTiles());
     expect(await pcp.getNumberOfProductTiles()).toBe(13);
   });
 
-  test.only("PCP product info", async () => {
+  test.skip("PCP product info", async () => {
     let pcp = new PCP(driver, until);
     //await pcp.openPage();
     //console.table(await pcp.getAllProductsOnPage());
@@ -71,13 +71,13 @@ describe(`Infinite V3 automation testing`, () => {
     console.log('finished!');
   });
 
-  test.only("Cart info", async () => {
+  test.skip("Cart info", async () => {
     let cart = new Cart(driver, until);
     console.table(await cart.getCartProductInfo());
     await driver.sleep(1000);
   });
 
-  test.only("Cart checkout", async () => {
+  test.skip("Cart checkout", async () => {
     let cart = new Cart(driver, until);
     await waitForSafari(driver, 1000);
     await cart.clickProceedToCheckout();
@@ -85,7 +85,7 @@ describe(`Infinite V3 automation testing`, () => {
     await driver.sleep(1000);
   });
 
-  test.only("Shopify checkout", async () => {
+  test.skip("Shopify checkout", async () => {
     let checkOut = new CheckOut(driver, until);
     console.table(await checkOut.getAllCartProductInfo());
     await driver.sleep(2000);

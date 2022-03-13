@@ -11,7 +11,7 @@ https://jestjs.io/docs/en/configuration
 
 >defined in `jest.config.json`
 
-### Jest notes
+## Jest notes
 
 to run only a few tests
 ```
@@ -23,3 +23,12 @@ to skip tests
 ```
 test.skip
 describe.skip
+```
+
+
+## Chromedriver
+make sure to download the corresponding chromedriver with the version of chrome used
+```
+https://chromedriver.chromium.org/downloads
+```
+replace at the path of chromedriver (C:\Users\james\Documents\Personal\selenium\lib\chromedriver.exe)
