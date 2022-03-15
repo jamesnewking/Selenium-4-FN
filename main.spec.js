@@ -79,10 +79,11 @@ describe(`Infinite V3 automation testing`, () => {
     await pdp.openCart();
   });
 
-  test.skip("Cart info", async () => {
+  test.only("Cart info", async () => {
+    await driver.sleep(5000);
     let cart = new Cart(driver, until);
     console.table(await cart.getCartProductInfo());
-    await driver.sleep(1000);
+    // await driver.sleep(1000);
   });
 
   test.skip("Cart checkout", async () => {
