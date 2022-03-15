@@ -1,14 +1,19 @@
 import { Builder, By, Key, until } from "selenium-webdriver";
 import HomePage from "./pom/home";
 import PCP from "./pom/pcp";
+import PDP from "./pom/pdp";
 import Cart from "./pom/cart";
 import CheckOut from "./pom/checkout";
 import waitForSafari from "./helper/waitForSafari";
 import scrollIntoView from "./helper/scrollIntoView";
 import closePreviewBar from "./helper/closePreviewBar";
 //import { addConsoleHandler } from "selenium-webdriver/lib/logging";
-
-let driver = new Builder().forBrowser("chrome").build();
+let chrome = require('selenium-webdriver/chrome');
+jest.setTimeout(40000);
+let driver = new Builder()
+  .forBrowser("chrome")
+  .setChromeOptions(new chrome.Options().addArguments("--disable-notifications"))
+  .build();
 //let driver = new Builder().forBrowser("safari").build();
 
 describe(`Infinite V3 automation testing`, () => {
@@ -19,7 +24,7 @@ describe(`Infinite V3 automation testing`, () => {
   });
 
   afterAll(async () => {
-    await driver.close();
+    // await driver.close();
   });
 
   beforeEach(async () => {
@@ -35,9 +40,13 @@ describe(`Infinite V3 automation testing`, () => {
     expect(await homePage.getPageTitle()).toBe(homePage.homePageTitle);
   });
 
-  test.only("Scroll desktop NAV bar", async () => {
+  test.only("Close pop up offer", async () => {
     let homePage = new HomePage(driver, until);
-    //await driver.sleep(3000);
+    await homePage.closePopUp();
+  });
+
+  test.skip("Scroll desktop NAV bar", async () => {  
+    let homePage = new HomePage(driver, until);
     await homePage.hoverNavBar();
   });
 
@@ -46,29 +55,28 @@ describe(`Infinite V3 automation testing`, () => {
     await homePage.clickNavDresses();
   });
 
-  test.skip("Number of PCP", async () => {
+  test.only("Number of PCP", async () => {
     let pcp = new PCP(driver, until);
     console.log(`Number of Product Tiles found`);
     console.log(await pcp.getNumberOfProductTiles());
-    expect(await pcp.getNumberOfProductTiles()).toBe(13);
+    //expect(await pcp.getNumberOfProductTiles()).toBe(13);
   });
 
-  test.skip("PCP product info", async () => {
+  test.only("PCP product info", async () => {
     let pcp = new PCP(driver, until);
     //await pcp.openPage();
-    //console.table(await pcp.getAllProductsOnPage());
-    pcp.setProductTile(10);
-    await scrollIntoView(driver, until, pcp.productTileTopDiv);
-    const qvPressed = await pcp.pressQuickView();
-    console.log(`qvPressed ${qvPressed}`);
+    pcp.setProductTile(8);
+    console.table( await pcp.getProductTileInfo() );
+    await pcp.pressPDP();
+  });
 
-    if (qvPressed) {
-      console.table(await pcp.getQuickViewProductInfo());
-    }
-    //console.log(await pcp.getQuickViewProductInfo());
-    await driver.sleep(1000);
-    await pcp.quickViewAddToCart();
-    console.log('finished!');
+  test.only("PDP product info", async () => {
+    await driver.sleep(2000);
+    let pdp = new PDP(driver, until);
+    console.table( await pdp.getProductInfo() );
+    console.log(`size: ${await pdp.selectProductOptions()}`);
+    await pdp.addToBag();
+    await pdp.openCart();
   });
 
   test.skip("Cart info", async () => {

@@ -4,19 +4,22 @@ export default class HomePage {
     this.until = until;
     this.url = `https://www.fashionnova.com/`;
     this.homePageTitle = `Fashion Nova | Fashion Online For Women | Affordable Women's Clothing | Fashion Nova`;
-    this.PCPTitle = `All Products – Infinite V3`;
+    this.PCPTitle = `Women's Dresses | Fashion Dresses For Women | Fashion Nova`;
+
+    this.popUpCloseButton = {
+      css: `a.bx-close.bx-close-link.bx-close-inside`,
+    };
 
     this.preHeaderNextButton = {
-      css: `button.splide__arrow splide__arrow--next`,
+      css: `button.splide__arrow.splide__arrow--next`,
     };
 
     this.navDresses = { linkText: `Dresses` };
     // this.navDresses = {
     //   css: `nav.NavBar__primary > ul.NavList > li.NavList__heading > a[href="/collections/all"]`,
     // };
-    this.navDressesMiniDresses = { linkText: `Mini Dresses` };
+    this.navLingerie = { linkText: `Lingerie` };
     this.navTops = { linkText: `Tops` };
-    this.navAccessories = { linkText: `Accessories` };
   }
 
   async openPage(url = this.url) {
@@ -28,33 +31,46 @@ export default class HomePage {
     return await this.driver.getTitle();
   }
 
+  async closePopUp(closeButton = this.popUpCloseButton) {
+    await this.driver.sleep(7000);
+    const closePopUpButton = await this.driver.findElements(closeButton);
+    //await this.driver.wait(this.driver.findElement, 1000);
+    if(closePopUpButton.length){
+      await this.driver.findElement(closeButton).click();
+      await this.driver.sleep(1000);
+    }
+    console.log(`closePopUpButton length = ${closePopUpButton.length}`);
+  }
+
   async hoverNavBar() {
-    await this.driver.findElement(this.preHeaderNextButton).click(); //safari does not respond on this first click;
-    await this.driver.findElement(this.preHeaderNextButton).click();
+    const preHeaderNextButtonArray = await this.driver.findElements(this.preHeaderNextButton);
+    const preHeaderNextButtonElement = preHeaderNextButtonArray[0];
+    await preHeaderNextButtonElement.click();
+    await this.driver.sleep(500);
+    await preHeaderNextButtonElement.click();
+    await this.driver.sleep(500);
+    await preHeaderNextButtonElement.click();
+    await this.driver.sleep(500);
+    await preHeaderNextButtonElement.click();
 
     const navDresses = await this.driver.wait(
       this.until.elementLocated(this.navDresses)
     );
-    const navDressesMiniDresses = await this.driver.wait(
-      this.until.elementLocated(this.navDressesMiniDresses)
+    const navLingerie = await this.driver.wait(
+      this.until.elementLocated(this.navLingerie)
     );
     const navTops = await this.driver.wait(
       this.until.elementLocated(this.navTops)
-    );
-    const navAccessories = await this.driver.wait(
-      this.until.elementLocated(this.navAccessories)
     );
 
     await this.driver
       .actions({ bridge: true })
       .move({ origin: navDresses })
-      .pause(500)
-      .move({ origin: navDressesMiniDresses })
-      .pause(500)
+      .pause(1000)
+      .move({ origin: navLingerie })
+      .pause(1000)
       .move({ origin: navTops })
-      .pause(500)
-      .move({ origin: navAccessories })
-      .pause(500)
+      .pause(1000)
       .perform();
   }
 
