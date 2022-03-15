@@ -1,51 +1,26 @@
 import scrollPastElement from "../helper/scrollPastElement";
 import scrollIntoView from "../helper/scrollIntoView";
+import slowScrollDown from "../helper/slowScrollDown";
 export default class PCP {
   constructor(driver, until) {
     this.driver = driver;
     this.until = until;
-    this.url = `https://infinite-v3.myshopify.com/collections/all`;
-    this.PCPTitle = `All Products – Infinite V3`;
+    this.url = `https://www.fashionnova.com/collections/dresses`;
+    this.PCPTitle = `Women's Dresses | Fashion Dresses For Women | Fashion Nova`;
 
     this.productTileClassesAll = {
-      css: `div.Overlay > div.Overlay__content div.InstantSearch__grid > div.ProductTile`,
+      css: `#MainContent > div.collection-layout > div.collection-layout__products > div.collection-list > div > div.collection-list__product-tile`,
     };
-
+    this.loadMore = { linkText: `Load more` };
+    this.sortOrder = { css: `button.collection-layout__show-sort-order`};
     this.productTileIndex = 1;
     this.productTileTopDiv;
-    this.productTileTitle;
-    this.productTileBaseImg;
-    this.productTileQuickViewButton;
-    this.productTilePrice;
-    this.setProductTile(this.productTileIndex);
+    this.productTitle;
+    this.productBaseImg;
+    this.productPrice;
+    this.productPriceCompareAt;
 
-    //quickView
-    this.quickViewProductTitle = {
-      css: `#sectionINF-ProductQuickView > div > div > div.ProductInfo > div.ProductHeading > h1`,
-    };
-    this.quickViewPurchasePrice = {
-      css: `#sectionINF-ProductQuickView > div > div > div.ProductInfo > div.ProductHeading > div.Price`,
-    };
-    this.quickViewProductSaleCompareAtPrice = {
-      css: `#sectionINF-ProductQuickView > div > div > div.ProductInfo > div.ProductHeading > div.Price > s.Price__compare-at`,
-    };
-    this.quickViewProductSalePrice = {
-      css: `#sectionINF-ProductQuickView > div > div > div.ProductInfo > div.ProductHeading > div.Price > span`,
-    };
-    this.quickViewProductOptionIndex = 1;
-    this.quickViewProductOptionsAll = {
-      css: `#sectionINF-ProductQuickView > div > div > div.ProductInfo > div.ProductOptions > form> div.Form__body > div > div.ProductOption`,
-    };
-    this.quickViewProductOptionLabel;
-    this.quickViewProductOptionSelected;
-    this.setQuickViewProductOption(this.quickViewProductOptionIndex);
-    this.quickViewAddToCartButton = {
-      css: `div.ProductAddToCartButton > form > button`,
-    };
-    this.quickViewCloseX = {
-      css: `#QuickView > div.Modal__content > div > div.CloseIcon`,
-    };
-    //quickView
+    this.setProductTile(this.productTileIndex);
   }
 
   async openPage(url = this.url) {
@@ -57,28 +32,35 @@ export default class PCP {
   setProductTile(index) {
     this.productTileIndex = index;
     this.productTileTopDiv = {
-      css: `div.Overlay > div.Overlay__content div.InstantSearch__grid > div.ProductTile:nth-child(${this.productTileIndex})`,
+      css: `#MainContent > div.collection-layout > div.collection-layout__products > div.collection-list > div > div.collection-list__product-tile:nth-child(${this.productTileIndex})`,
     };
     this.productTitle = {
-      css: `div.Overlay > div.Overlay__content div.InstantSearch__grid > div.ProductTile:nth-child(${this.productTileIndex}) > div.ProductTile__content > p > a`,
+      css: `#MainContent > div.collection-layout > div.collection-layout__products > div.collection-list > div > div.collection-list__product-tile:nth-child(${this.productTileIndex}) form > div.product-tile__content-line > div.product-tile__product >  div.product-tile__product-title > a`,
     };
     this.productBaseImg = {
-      css: `div.Overlay > div.Overlay__content div.InstantSearch__grid > div.ProductTile:nth-child(${this.productTileIndex}) > a > img`,
-    };
-    this.productQuickViewButton = {
-      css: `div.Overlay > div.Overlay__content div.InstantSearch__grid > div.ProductTile:nth-child(${this.productTileIndex}) > a > div.QuickView__button`,
-    };
+      css: `#splide${this.productTileIndex}-slide01 > img`,
+    }; //need to convert the tile index to two digits if less than 10 and add 0 ( if 5 it needs to be #splide05)
     this.productPrice = {
-      css: `div.Overlay > div.Overlay__content div.InstantSearch__grid > div.ProductTile:nth-child(${this.productTileIndex}) > div.ProductTile__content > div.Price`,
+      css: `#MainContent > div.collection-layout > div.collection-layout__products > div.collection-list > div > div.collection-list__product-tile:nth-child(${this.productTileIndex}) form div.product-tile__content-line div.product-tile__price-line span.product-tile__price`,
+    };
+    this.productPriceCompareAt = {
+      css: `#MainContent > div.collection-layout > div.collection-layout__products > div.collection-list > div > div.collection-list__product-tile:nth-child(${this.productTileIndex}) form div.product-tile__content-line div.product-tile__price-line span.product-tile__compare-at-price`,
     };
   }
 
   async getProductTileInfo() {
-    await scrollPastElement(this.driver, this.productPrice, -160);
+    await scrollPastElement(this.driver, this.until, this.productPrice, 400);
     const info = {};
-    //await this.driver.sleep(500);
     const productTitleEle = await this.driver.findElement(this.productTitle);
     const productPriceEle = await this.driver.findElement(this.productPrice);
+    info.onSale = false;
+    const productPriceCompareAtArr = await this.driver.findElements(this.productPriceCompareAt);
+    const productIsOnSale = productPriceCompareAtArr.length;
+    if(productIsOnSale){
+      const productPriceCompareAtEle = await this.driver.findElement(this.productPriceCompareAt);
+      info.onSale = true;
+      info.priceCompareAt = await productPriceCompareAtEle.getText();
+    }
     await this.driver.wait(this.until.elementIsVisible(productTitleEle));
     info.title = await productTitleEle.getText();
     info.price = await productPriceEle.getText();
@@ -93,106 +75,19 @@ export default class PCP {
   }
 
   async getNumberOfProductTiles() {
+    await scrollPastElement(this.driver, this.until, this.loadMore, 800);
+    await scrollPastElement(this.driver, this.until, this.sortOrder, 140);
+    await this.driver.sleep(1000);
+    await slowScrollDown(this.driver, 1000, 8);
     const productArray = await this.driver.findElements(
       this.productTileClassesAll
     );
+    await scrollPastElement(this.driver, this.until, this.sortOrder, 140);
     return productArray.length;
   }
 
-  async pressQuickView() {
-    const productImageArray = await this.driver.findElements(
-      this.productBaseImg
-    );
-    if (productImageArray.length) {
-      let singleProductElement = await this.driver.findElement(
-        this.productBaseImg
-      );
-      const actions = this.driver.actions({ bridge: true });
-      await actions
-        .move({ duration: 1500, origin: singleProductElement, x: 100, y: 300 })
-        .pause(500)
-        .perform(); //changed to y:300 for ff
-      await this.driver.findElement(this.productQuickViewButton).click();
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  setQuickViewProductOption(index = 1) {
-    this.quickViewProductOptionIndex = index;
-    this.quickViewProductOptionLabel = {
-      css: `#sectionINF-ProductQuickView > div > div > div.ProductInfo > div.ProductOptions > form> div.Form__body > div > div.ProductOption:nth-child(${this.quickViewProductOptionIndex}) > div> div > div > label`,
-    };
-    this.quickViewProductOptionSelected = {
-      css: `#sectionINF-ProductQuickView > div > div > div.ProductInfo > div.ProductOptions > form> div.Form__body > div > div.ProductOption:nth-child(${this.quickViewProductOptionIndex}) > div> div > div > select > option:nth-child(2)`,
-    };
-  }
-
-  async getQuickViewProductInfo() {
-    const qvProductInfoObj = {
-      title: null,
-      price_purchase: null,
-      price_SaleCompareAtPrice: null,
-      price_SalePrice: null,
-      numberOfOptions: null,
-      optionArr: [],
-    };
-    let qvProductTitleElement = await this.driver.wait(
-      this.until.elementLocated(this.quickViewProductTitle)
-    );
-    qvProductInfoObj.title = await qvProductTitleElement.getText();
-    const salePriced = await this.driver.findElements(
-      this.quickViewProductSaleCompareAtPrice
-    );
-    if (salePriced.length) {
-      qvProductInfoObj.price_SaleCompareAtPrice = await this.driver
-        .findElement(this.quickViewProductSaleCompareAtPrice)
-        .getText();
-      qvProductInfoObj.price_SalePrice = await this.driver
-        .findElement(this.quickViewProductSalePrice)
-        .getText();
-    } else {
-      qvProductInfoObj.price_purchase = await this.driver
-        .findElement(this.quickViewPurchasePrice)
-        .getText();
-    }
-
-    const qvOptionEleArray = await this.driver.findElements(
-      this.quickViewProductOptionsAll
-    );
-
-    qvProductInfoObj.numberOfOptions = qvOptionEleArray.length;
-    if (qvProductInfoObj.numberOfOptions) {
-      for (let i = 1; i <= qvProductInfoObj.numberOfOptions; i++) {
-        this.setQuickViewProductOption(i);
-        await scrollIntoView(
-          this.driver,
-          this.until,
-          this.quickViewProductOptionLabel
-        );
-        const optionLabel = await this.driver
-          .findElement(this.quickViewProductOptionLabel)
-          .getText();
-        const optionSelectedText = await this.driver
-          .findElement(this.quickViewProductOptionSelected)
-          .getAttribute(`value`);
-        const optionObj = {};
-        optionObj[optionLabel] = optionSelectedText;
-        qvProductInfoObj.optionArr.push(optionObj);
-      }
-    }
-    return qvProductInfoObj;
-  }
-
-  async quickViewAddToCart() {
-    console.log(`Debug: quickViewAddToCart()`)
-    await scrollIntoView(
-      this.driver,
-      this.until,
-      this.quickViewAddToCartButton
-    );
-    await this.driver.findElement(this.quickViewAddToCartButton).click();
+  async pressPDP() {
+    await this.driver.findElement(this.productTitle).click();
   }
 
   async getAllProductsOnPage() {
