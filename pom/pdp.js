@@ -92,6 +92,7 @@ export default class PDP {
       this.until, 
       this.addToBagButton
       );
+    await this.driver.sleep(1000);
     await this.driver.findElement( this.addToBagButton ).click();
   }
 
@@ -101,6 +102,7 @@ export default class PDP {
       this.until, 
       this.cartButton
       );
+    await this.driver.sleep(2000);
     await this.driver.findElement( this.cartButton ).click();
   }
 

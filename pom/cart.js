@@ -2,56 +2,38 @@ export default class Cart {
   constructor(driver, until) {
     this.driver = driver;
     this.until = until;
-    this.url = `https://infinite-v3.myshopify.com/#cart/`;
-
-    this.cartCloseX = {
-      css: `#shopify-section-INF-Header > div.Headroom--preheader.Headroom--disabled-mobile.Headroom.Headroom--top.Headroom--not-bottom > div.PreHeader.PreHeader--hide-mobile.Section.Section--relative.Section--full > div > div.PreHeader__icons > a:nth-child(5) > span > span.IconToggle__open > div`,
-    };
-    this.cartContinueShopping = {
-      css: `#cart_form > div.SliderCart__contents > div.SliderCart__bottom > div`,
-    };
+    this.url = `https://www.fashionnova.com/cart`;
 
     this.cartProductIndex = 1;
     this.cartProductTitle;
-    this.cartProductOptions;
-    this.cartPurchasePrice;
-    // this.cartProductRecurrence;
-    // this.cartProductFrequency;
-    //this.cartTotalPrice = { 'css' : `#cart_form > div:nth-child(1) > div.StickyCheckout__subtotal > div.StickyCheckout__value > span`};//need to strip $ and , then convert to number
-    //this.cartTotalItems = { 'css' : `#cart_form > div:nth-child(1) > div.StickyCheckout__subtotal > div > p.StickyCheckout__items--desktop > span:nth-child(1)`};
-    this.cartTopRightOpen = {
-      css: `#shopify-section-INF-Header > div.Headroom--disabled.Headroom--disabled-mobile > div.Header.Header--has-preheader.Header--buttons-placement-preheader > header.Header__desktop.Section.Section--fixed.Section--side-gutters > div.Section__container > div > div.NavBar__icons > a:nth-child(3)`,
-    };
-    this.cartProceedToCheckout = {
-      css: `div#SliderCart > form#CartForm > div.Form__body > div.StickyCheckout:nth-child(1) input.StickyCheckout__button--desktop`,
-    };
+    this.cartProductColor;
+    this.cartPricePurchase;
+    this.cartPriceCompareAt;
     this.setCartProduct(this.cartProductIndex);
   }
 
   setCartProduct(index = 1) {
     //the top product in side cart has index of 1
     this.cartProductTitle = {
-      css: `div#SliderCart > form#CartForm > div.Form__body > div.SliderCart__contents > div.SliderCart__products > div.CartItem:nth-child(${this.cartProductIndex}) > div.CartItem__info > a`,
+      css: `tbody.cart-content__items > tr.cart-content__item:nth-child(${index}) > td.cart-content__item-price-area > a.cart-content__product-title`,
     };
-    this.cartProductOptions = {
-      css: `div#SliderCart > form#CartForm > div.Form__body > div.SliderCart__contents > div.SliderCart__products > div.CartItem:nth-child(${this.cartProductIndex}) div.CartItem__options > span`,
+    this.cartProductColor = {
+      css: `tbody.cart-content__items > tr.cart-content__item:nth-child(${index}) > td.cart-content__item-price-area > div.cart-content__variant-line > button > span.cart-content__variant-title > span`,
     };
-    this.cartPurchasePrice = {
-      css: `div#SliderCart > form#CartForm > div.Form__body > div.SliderCart__contents > div.SliderCart__products > div.CartItem:nth-child(${this.cartProductIndex}) div.CartItem__price`,
+    this.cartPricePurchase = {
+      css: `tbody.cart-content__items > tr.cart-content__item:nth-child(${index}) > td.cart-content__item-price-area > div.cart-content__price-line > div.cart-content__item-price`,
     };
-    // this.cartProductRecurrence = {
-    //   css: `#cart_form > div.SliderCart__contents > div.SliderCart__products > div:nth-child(${this.cartProductIndex}) > div.CartProduct__info > div.CartProduct__subscription`,
-    // };
-    // this.cartProductFrequency = {
-    //   css: `#cart_form > div.SliderCart__contents > div.SliderCart__products > div:nth-child(${this.cartProductIndex}) > div.CartProduct__info > div.CartProduct__subscription > span`,
-    // };
+    this.cartPriceCompareAt = {
+      css: `tbody.cart-content__items > tr.cart-content__item:nth-child(${index}) > td.cart-content__item-price-area > div.cart-content__price-line > div.cart-content__item-compare-at-price`,
+    };
   }
 
   async getCartProductInfo() {
     const outputProductInfoObject = {
       title: null,
       price_purchase: null,
-      options: null,
+      price_compare_at: null,
+      color: null,
     };
     const productTitle = await this.driver.wait(
       this.until.elementLocated(this.cartProductTitle)
@@ -60,10 +42,13 @@ export default class Cart {
     outputProductInfoObject.title = await productTitle.getText();
     outputProductInfoObject.title = outputProductInfoObject.title.trim();
     outputProductInfoObject.price_purchase = await this.driver
-      .findElement(this.cartPurchasePrice)
+      .findElement(this.cartPricePurchase)
       .getText();
-    outputProductInfoObject.options = await this.driver
-      .findElement(this.cartProductOptions)
+    outputProductInfoObject.price_compare_at = await this.driver
+      .findElement(this.cartPriceCompareAt)
+      .getText();
+    outputProductInfoObject.color = await this.driver
+      .findElement(this.cartProductColor)
       .getText();
 
     for (let key in outputProductInfoObject) {
