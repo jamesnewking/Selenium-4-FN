@@ -63,17 +63,17 @@ export default class PDP {
     await this.driver.sleep(500);
     const productTitleEle = await this.driver.findElement(this.productTitle);
     const productPriceEle = await this.driver.findElement(this.productPrice);
-    info.on_sale = false;
+    info.onSale = false;
     const productPriceCompareAtArr = await this.driver.findElements(this.productPriceCompareAt);
     const productIsOnSale = productPriceCompareAtArr.length;
     if(productIsOnSale){
       const productPriceCompareAtEle = await this.driver.findElement(this.productPriceCompareAt);
-      info.on_sale = true;
-      info.price_compare_at = await productPriceCompareAtEle.getText();
+      info.onSale = true;
+      info.priceCompareAt = await productPriceCompareAtEle.getText();
     }
     await this.driver.wait(this.until.elementIsVisible(productTitleEle));
     info.title = await productTitleEle.getText();
-    info.price_purchase = await productPriceEle.getText();
+    info.price = await productPriceEle.getText();
     info.color = await this.driver.findElement( this.productOptionsColorText ).getText();
     info.size = await this.driver.findElement( this.productOptionsSizeText ).getText();
     // console.log(

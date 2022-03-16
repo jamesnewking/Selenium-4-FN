@@ -9,13 +9,14 @@ import scrollIntoView from "./helper/scrollIntoView";
 import closePreviewBar from "./helper/closePreviewBar";
 //import { addConsoleHandler } from "selenium-webdriver/lib/logging";
 let chrome = require('selenium-webdriver/chrome');
+jest.setTimeout(40000);
 let driver = new Builder()
   .forBrowser("chrome")
   .setChromeOptions(new chrome.Options().addArguments("--disable-notifications"))
   .build();
 //let driver = new Builder().forBrowser("safari").build();
 
-describe(`Fashion Nova automation testing`, () => {
+describe(`Infinite V3 automation testing`, () => {
 
   beforeAll(async () => {
     await driver.manage().window().setRect({ width: 1024, height: 768 });
@@ -27,10 +28,10 @@ describe(`Fashion Nova automation testing`, () => {
   });
 
   beforeEach(async () => {
-    // const previewTheme = await closePreviewBar(driver, until);
-    // if (!previewTheme.includes(`No preview theme`)) {
-    //   console.log(`Preview theme: ${previewTheme}`);
-    // }
+    const previewTheme = await closePreviewBar(driver, until);
+    if (!previewTheme.includes(`No preview theme`)) {
+      console.log(`Preview theme: ${previewTheme}`);
+    }
   });
 
   test.only("Home Page has title", async () => {
@@ -44,7 +45,7 @@ describe(`Fashion Nova automation testing`, () => {
     await homePage.closePopUp();
   });
 
-  test.only("Scroll desktop NAV bar", async () => {  
+  test.skip("Scroll desktop NAV bar", async () => {  
     let homePage = new HomePage(driver, until);
     await homePage.hoverNavBar();
   });
@@ -56,13 +57,14 @@ describe(`Fashion Nova automation testing`, () => {
 
   test.only("Number of PCP", async () => {
     let pcp = new PCP(driver, until);
-    const numberOfProductTiles = await pcp.getNumberOfProductTiles();
-    //console.log(`Number of Product Tiles found: ${numberOfProductTiles}`);
-    expect(numberOfProductTiles).toBe(48);
+    console.log(`Number of Product Tiles found`);
+    console.log(await pcp.getNumberOfProductTiles());
+    //expect(await pcp.getNumberOfProductTiles()).toBe(13);
   });
 
   test.only("PCP product info", async () => {
     let pcp = new PCP(driver, until);
+    //await pcp.openPage();
     pcp.setProductTile(8);
     console.table( await pcp.getProductTileInfo() );
     await pcp.pressPDP();
@@ -84,12 +86,15 @@ describe(`Fashion Nova automation testing`, () => {
     // await driver.sleep(1000);
   });
 
-  test.only("Cart checkout", async () => {
+  test.skip("Cart checkout", async () => {
     let cart = new Cart(driver, until);
-    await cart.clickCheckout();
+    await waitForSafari(driver, 1000);
+    await cart.clickProceedToCheckout();
+    // await waitForSafari(driver, 2000);
+    await driver.sleep(1000);
   });
 
-  test.only("Shopify checkout", async () => {
+  test.skip("Shopify checkout", async () => {
     let checkOut = new CheckOut(driver, until);
     console.table(await checkOut.getAllCartProductInfo());
     await driver.sleep(2000);
