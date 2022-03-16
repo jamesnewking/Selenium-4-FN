@@ -39,7 +39,6 @@ export default class HomePage {
       await this.driver.findElement(closeButton).click();
       await this.driver.sleep(1000);
     }
-    console.log(`closePopUpButton length = ${closePopUpButton.length}`);
   }
 
   async hoverNavBar() {
