@@ -25,7 +25,7 @@ export default class PCP {
 
   async openPage(url = this.url) {
     await this.driver.get(url);
-    console.log(`debug ${await this.driver.getTitle()}`);
+    // console.log(`debug ${await this.driver.getTitle()}`);
     await this.driver.wait(this.until.titleIs(this.PCPTitle), 1000);
   }
 
@@ -53,20 +53,17 @@ export default class PCP {
     const info = {};
     const productTitleEle = await this.driver.findElement(this.productTitle);
     const productPriceEle = await this.driver.findElement(this.productPrice);
-    info.onSale = false;
+    info.on_sale = false;
     const productPriceCompareAtArr = await this.driver.findElements(this.productPriceCompareAt);
     const productIsOnSale = productPriceCompareAtArr.length;
     if(productIsOnSale){
       const productPriceCompareAtEle = await this.driver.findElement(this.productPriceCompareAt);
-      info.onSale = true;
-      info.priceCompareAt = await productPriceCompareAtEle.getText();
+      info.on_sale = true;
+      info.price_compare_at = await productPriceCompareAtEle.getText();
     }
     await this.driver.wait(this.until.elementIsVisible(productTitleEle));
     info.title = await productTitleEle.getText();
-    info.price = await productPriceEle.getText();
-    console.log(
-      `debug ${await this.driver.findElement(this.productTitle).getText()}`
-    );
+    info.price_purchase = await productPriceEle.getText();
     return info;
   }
 
@@ -92,13 +89,13 @@ export default class PCP {
 
   async getAllProductsOnPage() {
     const numberOfProducts = await this.getNumberOfProductTiles();
-    console.log(`numberOfProducts ${numberOfProducts}`);
+    // console.log(`numberOfProducts ${numberOfProducts}`);
     const allProductInfo = [];
     for (let i = 1; i <= numberOfProducts; i++) {
-      console.log(i);
+      // console.log(i);
       this.setProductTile(i);
       allProductInfo.push(await this.getProductTileInfo());
-      console.log(await this.getProductTileInfo());
+      // console.log(await this.getProductTileInfo());
     }
     return allProductInfo;
   }
