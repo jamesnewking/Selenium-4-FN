@@ -1,6 +1,6 @@
 {
-  "verbose": false,
-  "testTimeout": 40000,
+  "verbose": true,
+  "testTimeout": 20000,
   "collectCoverage": true,
   "moduleFileExtensions": [
     "js",

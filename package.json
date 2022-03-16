@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Selenium automation",
   "main": "test.js",
+  
   "scripts": {
     "test": "jest"
   },

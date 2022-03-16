@@ -10,10 +10,6 @@ export default class Cart {
     this.cartPricePurchase;
     this.cartPriceCompareAt;
     this.setCartProduct(this.cartProductIndex);
-
-    this.checkOutButton = {
-      css: `a.cart-page__checkout-CTA`,
-    };
   }
 
   setCartProduct(index = 1) {
@@ -63,21 +59,17 @@ export default class Cart {
       }
     }
     return outputProductInfoObject;
-  };
+  }
 
-  // async clickProceedToCheckout() {
-  //   // await this.driver.wait( this.until.elementIsVisible( this.driver.findElement( this.cartTopRightOpen  )), 4000 );
-  //   // await this.driver.findElement( this.cartTopRightOpen ).click();
-  //   await this.driver.wait(
-  //     this.until.elementIsVisible(
-  //       this.driver.findElement(this.cartProceedToCheckout)
-  //     ),
-  //     5000
-  //   );
-  //   await this.driver.findElement(this.cartProceedToCheckout).click();
-  // };
-
-  async clickCheckout(){
-    await this.driver.findElement(this.checkOutButton).click();
-  };
+  async clickProceedToCheckout() {
+    // await this.driver.wait( this.until.elementIsVisible( this.driver.findElement( this.cartTopRightOpen  )), 4000 );
+    // await this.driver.findElement( this.cartTopRightOpen ).click();
+    await this.driver.wait(
+      this.until.elementIsVisible(
+        this.driver.findElement(this.cartProceedToCheckout)
+      ),
+      5000
+    );
+    await this.driver.findElement(this.cartProceedToCheckout).click();
+  }
 }
