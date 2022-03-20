@@ -9,7 +9,7 @@
   "author": "James",
   "license": "ISC",
   "dependencies": {
-    "selenium-webdriver": "^4.0.0"
+    "selenium-webdriver": "^4.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.16.0",
