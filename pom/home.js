@@ -18,8 +18,10 @@ export default class HomePage {
     // this.navDresses = {
     //   css: `nav.NavBar__primary > ul.NavList > li.NavList__heading > a[href="/collections/all"]`,
     // };
-    this.navLingerie = { linkText: `Lingerie` };
-    this.navTops = { linkText: `Tops` };
+    // this.navLingerie = { linkText: `Lingerie` };
+    // this.navTops = { linkText: `Tops` };
+    this.navShoes = { linkText: `Shoes` };
+    this.navTrending = { linkText: `Trending` };
   }
 
   async openPage(url = this.url) {
@@ -55,20 +57,20 @@ export default class HomePage {
     const navDresses = await this.driver.wait(
       this.until.elementLocated(this.navDresses)
     );
-    const navLingerie = await this.driver.wait(
-      this.until.elementLocated(this.navLingerie)
+    const navShoes = await this.driver.wait(
+      this.until.elementLocated(this.navShoes)
     );
-    const navTops = await this.driver.wait(
-      this.until.elementLocated(this.navTops)
+    const navTrending = await this.driver.wait(
+      this.until.elementLocated(this.navTrending)
     );
 
     await this.driver
       .actions({ bridge: true })
       .move({ origin: navDresses })
       .pause(1000)
-      .move({ origin: navLingerie })
+      .move({ origin: navShoes })
       .pause(1000)
-      .move({ origin: navTops })
+      .move({ origin: navTrending })
       .pause(1000)
       .perform();
   }

@@ -6,7 +6,7 @@ export default class Cart {
 
     this.cartProductIndex = 1;
     this.cartProductTitle;
-    this.cartProductColor;
+    this.cartProductSize;
     this.cartPricePurchase;
     this.cartPriceCompareAt;
     this.setCartProduct(this.cartProductIndex);
@@ -21,7 +21,7 @@ export default class Cart {
     this.cartProductTitle = {
       css: `tbody.cart-content__items > tr.cart-content__item:nth-child(${index}) > td.cart-content__item-price-area > a.cart-content__product-title`,
     };
-    this.cartProductColor = {
+    this.cartProductSize = {
       css: `tbody.cart-content__items > tr.cart-content__item:nth-child(${index}) > td.cart-content__item-price-area > div.cart-content__variant-line > button > span.cart-content__variant-title > span`,
     };
     this.cartPricePurchase = {
@@ -52,7 +52,7 @@ export default class Cart {
       .findElement(this.cartPriceCompareAt)
       .getText();
     outputProductInfoObject.color = await this.driver
-      .findElement(this.cartProductColor)
+      .findElement(this.cartProductSize)
       .getText();
 
     for (let key in outputProductInfoObject) {

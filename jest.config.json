@@ -1,7 +1,7 @@
 {
-  "verbose": false,
+  "verbose": true,
   "testTimeout": 40000,
-  "collectCoverage": true,
+  "collectCoverage": false,
   "moduleFileExtensions": [
     "js",
     "mjs"
