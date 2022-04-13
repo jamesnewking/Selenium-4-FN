@@ -5,7 +5,9 @@
 ```
 npm run test
 ```
+
 ## To configure Jest
+
 https://jestjs.io/docs/en/configuration
 
 
@@ -19,14 +21,16 @@ test.only
 describe.only
 
 ```
+
 to skip tests
+
 ```
 test.skip
 describe.skip
 ```
 
-
 ## Chromedriver
+
 make sure to download the corresponding chromedriver with the version of chrome used
 ```
 https://chromedriver.chromium.org/downloads

@@ -76,6 +76,7 @@ export default class PDP {
     info.price_purchase = await productPriceEle.getText();
     info.color = await this.driver.findElement( this.productOptionsColorText ).getText();
     info.size = await this.driver.findElement( this.productOptionsSizeText ).getText();
+    info.page = `pdp`;
     // console.log(
     //   `debug ${await this.driver.findElement( this.productTitle ).getText()}`
     // );
