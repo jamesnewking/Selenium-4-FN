@@ -34,9 +34,8 @@ export default class HomePage {
   }
 
   async closePopUp(closeButton = this.popUpCloseButton) {
-    await this.driver.sleep(7000);
+    await this.driver.wait(this.until.elementLocated(closeButton), 10000);
     const closePopUpButton = await this.driver.findElements(closeButton);
-    //await this.driver.wait(this.driver.findElement, 1000);
     if(closePopUpButton.length){
       await this.driver.findElement(closeButton).click();
       await this.driver.sleep(1000);

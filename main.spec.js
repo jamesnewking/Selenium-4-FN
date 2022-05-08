@@ -18,7 +18,7 @@ let driver = new Builder()
 describe(`Fashion Nova automation testing`, () => {
 
   beforeAll(async () => {
-    await driver.manage().window().setRect({ width: 1024, height: 768 });
+    await driver.manage().window().setRect({ width: 1200, height: 768 });
     // await driver.manage().window().maximize();
   });
 
@@ -63,8 +63,9 @@ describe(`Fashion Nova automation testing`, () => {
 
   test.only("PCP product info", async () => {
     let pcp = new PCP(driver, until);
-    pcp.setProductTile(8);
+    pcp.setProductTile(10);
     console.table( await pcp.getProductTileInfo() );
+    await driver.sleep(1000);
     await pcp.pressPDP();
   });
 
